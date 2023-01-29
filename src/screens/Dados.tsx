@@ -4,14 +4,19 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigation } from "@react-navigation/native";
 
+import { database } from "../databse";
+import { Conta as ContaModel } from "../databse/model/Conta";
+
+
 import {AntDesign} from '@expo/vector-icons';
 
 import { Input } from "../components/Input";
 import { ButtonDefault } from "../components/ButtonDefault";
 
+
 type DataProps = {
-    usuario: string,
-    senha: string
+    usuario: string;
+    senha: string;
 }
 
 const inicialData = {
@@ -20,9 +25,9 @@ const inicialData = {
 }
 
 const dadosSchema = yup.object({
-    usuario: yup.string().required('Favor inserir o seu usuário'),
-    senha: yup.string().required('Favor inserir sua senha')
-})
+    usuario: yup.string().required('Favor inserir o usuário'),
+    senha: yup.string().required('Favor inserir a senha')
+});
 
 export const Dados = () => {
 
@@ -37,8 +42,15 @@ export const Dados = () => {
         navigation.goBack();
     }
 
-    const handleSalvarDados = () => {
-        console.log('salvou');
+    const handleSalvarDados = async({usuario, senha}:DataProps) => {
+        console.log({usuario, senha});
+        const contaColection = database.get<ContaModel>('contas');
+        await database.write( async() => {
+            contaColection.create((conta) => {
+                conta.usuario = usuario;
+                conta.senha = senha;
+            });
+        });
     }
 
     return(
@@ -65,28 +77,28 @@ export const Dados = () => {
                 <VStack>                
                     <Text color='white'>DADOS</Text>
 
-                    <Controller
-                        name="usuario"
+                    <Controller                        
                         control={control}
+                        name="usuario"
                         render={({field: {onChange, value}}) => (
                             <Input 
                                 placeholder="Usuário" 
                                 value={value}
-                                onChange={onChange}
+                                onChangeText={onChange}
                                 errorMessage={errors.usuario?.message}
                             />
                         )}
                     />
                     
                     <Controller 
-                        name="senha"
                         control={control}
+                        name="senha"                        
                         render={({field: {onChange, value}}) => (
                             <Input 
                                 type="password" 
                                 placeholder="Senha"
                                 value={value}
-                                onChange={onChange}
+                                onChangeText={onChange}
                                 errorMessage={errors.senha?.message}
                             />                    
                         )}

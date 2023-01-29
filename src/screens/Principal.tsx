@@ -1,9 +1,10 @@
-import { Center, Fab, FlatList, Icon, Text, VStack, Box, IconButton, HStack } from "native-base"
+import { Fab, FlatList, Icon, Text, VStack, Box, IconButton, HStack } from "native-base"
 import { Card } from "../components/Card"
 import { AntDesign } from '@expo/vector-icons';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { stackRoutesProps } from "../routes/stack.routes";
+import { database } from "../databse";
 
 export const Principal = () => {
 
@@ -19,6 +20,26 @@ export const Principal = () => {
         navigation.navigate('configs');
     }
 
+    const getContas = async() => {
+        const contaCollection = database.get('contas');
+        const contas = await contaCollection.query().fetch();
+        let valores = [];
+        let resultado = [];
+        contas.map(result => {
+            let dados = {
+                'id': result._raw.id,
+                'usuario': result._raw.usuario,
+                'senha': result._raw.senha
+            };            
+            resultado.push(...valores, dados);
+        });
+        setData(resultado);
+    }
+
+    useEffect(() => {
+        getContas();
+    }, [data]);
+
     return(
         <>
             <Box
@@ -32,9 +53,9 @@ export const Principal = () => {
             </Box>
             <FlatList 
                 data={data}
-                keyExtractor={(item) => item}
-                renderItem={(item) => (
-                    <Card />
+                keyExtractor={(item) => item.id}
+                renderItem={({item}) => (
+                    <Card key={item.id} usuario={item.usuario} />
                 )}
                 ListEmptyComponent={(                   
                     <VStack flex={1} alignItems='center' justifyContent='center'>
