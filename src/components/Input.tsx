@@ -1,35 +1,34 @@
-import {Input as InputComp, IInputProps, FormControl} from 'native-base';
+import { Input as InputComp, type IInputProps, FormControl } from "native-base";
 
-
-type InputProps = IInputProps &{
+type InputProperties = IInputProps & {
     placeholder: string;
     errorMessage?: string | null;
-}
+};
 
-export const Input = ({placeholder, errorMessage = null, isInvalid, ...rest}: InputProps) => {
-
+export function Input({
+    placeholder, errorMessage = null, isInvalid, ...rest
+}: InputProperties): JSX.Element {
     const invalid = !!errorMessage || isInvalid;
 
-    return(
+    return (
         <FormControl isInvalid={invalid} my={2}>
-            <InputComp 
-                w='full' 
-                placeholder={placeholder} 
-                color='white'
-                borderColor='darkBlue.800'
+            <InputComp
+                w="full"
+                placeholder={placeholder}
+                color="white"
+                borderColor="darkBlue.800"
                 borderWidth={3}
                 isInvalid={invalid}
                 _invalid={{
                     borderWidth: 1,
-                    borderColor: 'red.500'
+                    borderColor: "red.500",
                 }}
                 _focus={{
-                    borderColor: 'darkBlue.800',
-                    borderWidth: 3
+                    borderColor: "darkBlue.800",
+                    borderWidth: 3,
                 }}
-                {...rest} 
-            />
-            <FormControl.ErrorMessage _text={{color: 'red.500'}}>
+                {...rest} />
+            <FormControl.ErrorMessage _text={{ color: "red.500" }}>
                 {errorMessage}
             </FormControl.ErrorMessage>
         </FormControl>

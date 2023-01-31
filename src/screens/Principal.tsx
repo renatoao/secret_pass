@@ -1,86 +1,105 @@
-import { Fab, FlatList, Icon, Text, VStack, Box, IconButton, HStack } from "native-base"
-import { Card } from "../components/Card"
-import { AntDesign } from '@expo/vector-icons';
-import { useEffect, useState } from "react";
+/* eslint-disable no-underscore-dangle */
+import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { stackRoutesProps } from "../routes/stack.routes";
+import {
+    Fab, FlatList, Icon, Text, VStack, Box, IconButton, HStack,
+} from "native-base";
+import { useEffect, useState } from "react";
+
+import { Card } from "../components/Card";
 import { database } from "../databse";
+import { type stackRoutesProperties } from "../routes/stack.routes";
 
-export const Principal = () => {
+interface ItemInterface {
+    id: number;
+    usuario: string;
+}
 
-    const [data, setData] = useState<string[]>([]);
+type ItemType = Record<"item", ItemInterface>;
 
-    const navigation = useNavigation<stackRoutesProps>()
+function handleScreenDados(navigation: stackRoutesProperties): void {
+    navigation.navigate("dados");
+}
 
-    const handleScreenDados = () => {
-        navigation.navigate('dados');
-    }
+function handleScreenConfigs(navigation: stackRoutesProperties): void {
+    navigation.navigate("configs");
+}
 
-    const handleScreenConfigs = () => {
-        navigation.navigate('configs');
-    }
+export function Principal(): JSX.Element {
+    // TODO: Create a type to Array<Record<string, unknown>>
+    const [ data, setData ] = useState<Array<Record<string, unknown>>>([]);
 
-    const getContas = async() => {
-        const contaCollection = database.get('contas');
+    const navigation = useNavigation<stackRoutesProperties>();
+
+    async function getContas(): Promise<void> {
+        const contaCollection = database.get("contas");
         const contas = await contaCollection.query().fetch();
-        let valores = [];
-        let resultado = [];
-        contas.map(result => {
-            let dados = {
-                'id': result._raw.id,
-                'usuario': result._raw.usuario,
-                'senha': result._raw.senha
-            };            
-            resultado.push(...valores, dados);
-        });
+        const resultado = contas.map((result) => ({
+            "id": result._raw.id,
+            "usuario": result._raw.usuario,
+            "senha": result._raw.senha,
+        }));
         setData(resultado);
     }
 
     useEffect(() => {
-        getContas();
-    }, [data]);
+        void getContas();
+    }, [ data ]);
 
-    return(
+    return (
         <>
             <Box
-                w='full'
+                w="full"
                 h={24}
-                bg='darkBlue.800' 
+                bg="darkBlue.800"
             >
-                <HStack w='full' mt={12} px={4} justifyContent='flex-end'>
-                    <IconButton onPress={handleScreenConfigs} size={8} _icon={{ as: AntDesign, name: 'setting' }} key='solid' variant='solid' colorScheme='white' as={AntDesign} name='arrowleft' />
+                <HStack w="full" mt={12} px={4} justifyContent="flex-end">
+                    <IconButton
+                        onPress={(): void => {
+                            handleScreenConfigs(navigation);
+                        }}
+                        size={8}
+                        _icon={{ "as": AntDesign, "name": "setting" }}
+                        key="solid"
+                        variant="solid"
+                        colorScheme="white"
+                        as={AntDesign}
+                        name="arrowleft"
+                    />
                 </HStack>
             </Box>
-            <FlatList 
+            <FlatList
                 data={data}
-                keyExtractor={(item) => item.id}
-                renderItem={({item}) => (
-                    <Card key={item.id} usuario={item.usuario} />
+                keyExtractor={(item: ItemInterface): number => item.id}
+                renderItem={
+                    ({ item }: ItemType): JSX.Element => <Card key={item.id} usuario={item.usuario} />
+                }
+                ListEmptyComponent={(
+                    <VStack flex={1} alignItems="center" justifyContent="center">
+                        <Text color="white">Não existem senhas gravadas</Text>
+                    </VStack>
                 )}
-                ListEmptyComponent={(                   
-                    <VStack flex={1} alignItems='center' justifyContent='center'>
-                        <Text color='white'>Não existem senhas gravadas</Text>
-                    </VStack>                    
-                )}
-                flex={1} 
-                bg='darkBlue.900' 
+                flex={1}
+                bg="darkBlue.900"
                 px={4}
                 py={4}
                 showsVerticalScrollIndicator={false}
             />
-            
-            <Fab 
-                bg='amber.500'
-                size='lg'
+
+            <Fab
+                bg="amber.500"
+                size="lg"
                 icon={
-                    <Icon as={AntDesign} name='plus' size='sm' />
+                    <Icon as={AntDesign} name="plus" size="sm" />
                 }
                 _pressed={{
-                    bg: 'amber.600'
+                    "bg": "amber.600",
                 }}
                 renderInPortal={false}
-                onPress={handleScreenDados}
+                onPress={(): void => {
+                    handleScreenDados(navigation);
+                }}
             />
         </>
-    )
+    );
 }

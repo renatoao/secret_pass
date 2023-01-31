@@ -1,13 +1,11 @@
 {
-  "expo": {
-    "name": "secret_pass",
-    "slug": "secret_pass",
-    "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "android": {
-      "package": "com.br.bitdev.secretpass"
+    "expo": {
+        "android": {
+            "package": "com.br.bitdev.secretpass"
+        },
+        "assetBundlePatterns": [ "**/*" ],
+        "name": "secret_pass",
+        "slug": "secret_pass",
+        "version": "1.0.0"
     }
-  }
 }

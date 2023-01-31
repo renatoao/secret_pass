@@ -1,12 +1,13 @@
-import { StatusBar } from 'expo-status-bar';
-import { NativeBaseProvider } from 'native-base';
-import { Routes } from './src/routes';
+import { StatusBar } from "expo-status-bar";
+import { NativeBaseProvider } from "native-base";
 
-export default function App() {
-  return (
-    <NativeBaseProvider>
-        <StatusBar style="light" translucent backgroundColor='transparent' />
-        <Routes />
-    </NativeBaseProvider>
-  );
+import { Routes } from "./src/routes";
+
+export default function App(): JSX.Element {
+    return (
+        <NativeBaseProvider>
+            <StatusBar style="light" translucent backgroundColor="transparent" />
+            <Routes />
+        </NativeBaseProvider>
+    );
 }

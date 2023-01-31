@@ -1,14 +1,17 @@
 import { Model } from "@nozbe/watermelondb";
-import { field } from '@nozbe/watermelondb/decorators';
+import { field } from "@nozbe/watermelondb/decorators";
 
-class Conta extends Model{
-    static table = 'contas';
+class Conta extends Model {
 
-    @field('usuario')
-    usuario!: string;
+    public static table = "contas";
 
-    @field('senha')
-    senha!: string;
+    // NOTE: THIS is WORKING???
+    @field("usuario")
+    public usuario!: string;
+
+    @field("senha")
+    public senha!: string;
+
 }
 
-export {Conta}
+export { Conta };

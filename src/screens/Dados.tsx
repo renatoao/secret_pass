@@ -1,114 +1,118 @@
-import { Box, Text, IconButton, HStack, VStack } from "native-base"
-import {useForm, Controller} from 'react-hook-form';
-import {yupResolver} from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import { AntDesign } from "@expo/vector-icons";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
+import {
+    Box, Text, IconButton, HStack, VStack,
+} from "native-base";
+import { useForm, Controller } from "react-hook-form";
+import * as yup from "yup";
 
-import { database } from "../databse";
-import { Conta as ContaModel } from "../databse/model/Conta";
-
-
-import {AntDesign} from '@expo/vector-icons';
-
-import { Input } from "../components/Input";
 import { ButtonDefault } from "../components/ButtonDefault";
+import { Input } from "../components/Input";
+import { database } from "../databse";
+import { type Conta as ContaModel } from "../databse/model/Conta";
 
-
-type DataProps = {
+interface DataProperties {
     usuario: string;
     senha: string;
 }
 
 const inicialData = {
-    usuario: '',
-    senha: ''
-}
+    usuario: "",
+    senha: "",
+};
 
 const dadosSchema = yup.object({
-    usuario: yup.string().required('Favor inserir o usuário'),
-    senha: yup.string().required('Favor inserir a senha')
+    usuario: yup.string().required("Favor inserir o usuário"),
+    senha: yup.string().required("Favor inserir a senha"),
 });
 
-export const Dados = () => {
+function handleGoBack(): void {
+    const navigation = useNavigation();
+    navigation.goBack();
+}
 
-    const { control, handleSubmit, reset, formState: {errors} } = useForm<DataProps>({
+async function handleSalvarDados({ usuario, senha }: DataProperties): Promise<void> {
+    console.log({ usuario, senha });
+    const contaColection = database.get<ContaModel>("contas");
+    await database.write(async () => {
+        contaColection.create((conta) => {
+            conta.usuario = usuario;
+            conta.senha = senha;
+        })
+            .catch((error) => {
+                console.error("ERROR CONSOLE", error);
+            });
+    });
+}
+
+export function Dados(): JSX.Element {
+    const {
+        control, handleSubmit, formState: { errors },
+    } = useForm<DataProperties>({
         resolver: yupResolver(dadosSchema),
-        defaultValues: inicialData
+        defaultValues: inicialData,
     });
 
-    const navigation = useNavigation();
-
-    const handleGoBack = () => {
-        navigation.goBack();
-    }
-
-    const handleSalvarDados = async({usuario, senha}:DataProps) => {
-        console.log({usuario, senha});
-        const contaColection = database.get<ContaModel>('contas');
-        await database.write( async() => {
-            contaColection.create((conta) => {
-                conta.usuario = usuario;
-                conta.senha = senha;
-            });
-        });
-    }
-
-    return(
+    return (
         <Box
-            flex={1} 
-            bg='darkBlue.900' 
+            flex={1}
+            bg="darkBlue.900"
         >
             <Box
-                w='full'
+                w="full"
                 h={24}
-                bg='darkBlue.800' 
+                bg="darkBlue.800"
             >
                 <HStack mt={12} px={4}>
-                    <IconButton onPress={handleGoBack} size={8} _icon={{ as: AntDesign, name: 'arrowleft' }} key='solid' variant='solid' colorScheme='white' as={AntDesign} name='arrowleft' />
+                    <IconButton
+                        onPress={handleGoBack}
+                        size={8}
+                        _icon={{ "as": AntDesign, "name": "arrowleft" }}
+                        key="solid"
+                        variant="solid"
+                        colorScheme="white"
+                        as={AntDesign}
+                        name="arrowleft"
+                    />
                 </HStack>
             </Box>
-        
+
             <Box
                 px={4}
                 py={4}
                 flex={1}
-                justifyContent='space-between'
+                justifyContent="space-between"
             >
-                <VStack>                
-                    <Text color='white'>DADOS</Text>
+                <VStack>
+                    <Text color="white">DADOS</Text>
 
-                    <Controller                        
+                    <Controller
                         control={control}
                         name="usuario"
-                        render={({field: {onChange, value}}) => (
-                            <Input 
-                                placeholder="Usuário" 
-                                value={value}
-                                onChangeText={onChange}
-                                errorMessage={errors.usuario?.message}
-                            />
-                        )}
-                    />
-                    
-                    <Controller 
+                        render={({ field: { onChange, value } }): JSX.Element => <Input
+                            placeholder="Usuário"
+                            value={value}
+                            onChangeText={onChange}
+                            errorMessage={errors.usuario?.message} />} />
+
+                    <Controller
                         control={control}
-                        name="senha"                        
-                        render={({field: {onChange, value}}) => (
-                            <Input 
-                                type="password" 
-                                placeholder="Senha"
-                                value={value}
-                                onChangeText={onChange}
-                                errorMessage={errors.senha?.message}
-                            />                    
-                        )}
-                    />
-                    
+                        name="senha"
+                        render={({ field: { onChange, value } }): JSX.Element => <Input
+                            type="password"
+                            placeholder="Senha"
+                            value={value}
+                            onChangeText={onChange}
+                            errorMessage={errors.senha?.message} />} />
+
                 </VStack>
                 <VStack>
+                    {/* TODO: Considere tratar promises pois elas podem falhar em eventos */}
+                    {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
                     <ButtonDefault texto="Salvar" onPress={handleSubmit(handleSalvarDados)} />
                 </VStack>
             </Box>
         </Box>
-    )
+    );
 }
