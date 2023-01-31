@@ -1,31 +1,29 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Configs } from '../screens/configs';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { type NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import { Dados } from '../screens/Dados';
-import { Principal } from '../screens/Principal';
+import { Configs } from "../screens/configs";
+import { Dados } from "../screens/Dados";
+import { Principal } from "../screens/Principal";
 
-
-type StackRoutesProps = {
+interface StackRoutesProperties extends Record<string, undefined> {
     principal: undefined;
     dados: undefined;
     configs: undefined;
 }
 
-export type stackRoutesProps = NativeStackNavigationProp<StackRoutesProps>; 
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const { Navigator, Screen } = createNativeStackNavigator<StackRoutesProperties>();
 
-const {Navigator, Screen} = createNativeStackNavigator<StackRoutesProps>();
+export type stackRoutesProperties = NativeStackNavigationProp<StackRoutesProperties>;
 
-export const StackRoutes = () => {
-    return(
-        <Navigator
-            screenOptions={{
-                headerShown: false
-            }}
-        >
-            <Screen name='principal' component={Principal} />
-            <Screen name='dados' component={Dados} />
-            <Screen name='configs' component={Configs} />
-        </Navigator>
-    )
+export function StackRoutes(): JSX.Element {
+    return <Navigator
+        screenOptions={{
+            headerShown: false,
+        }}
+    >
+        <Screen name="principal" component={Principal} />
+        <Screen name="dados" component={Dados} />
+        <Screen name="configs" component={Configs} />
+    </Navigator>;
 }

@@ -1,8 +1,12 @@
-import { registerRootComponent } from 'expo';
+import { registerRootComponent } from "expo";
 
-import App from './App';
+// TODO: Não misture TS e JS
+// eslint-disable-next-line import/no-unresolved
+import App from "./App";
 
-// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
-// It also ensures that whether you load the app in Expo Go or in a native build,
-// the environment is set up appropriately
+/*
+ * RegisterRootComponent calls AppRegistry.registerComponent('main', () => App);
+ * It also ensures that whether you load the app in Expo Go or in a native build,
+ * the environment is set up appropriately
+ */
 registerRootComponent(App);

@@ -1,24 +1,20 @@
-import { Button, IButtonProps } from "native-base"
+import { Button, type IButtonProps } from "native-base";
 
-
-type ButtonProps = IButtonProps & {
+type ButtonProperties = IButtonProps & {
     texto: string;
-}
+};
 
-export const ButtonDefault = ({texto, ...rest}: ButtonProps) => {
-    return(
-        <Button 
-            w='full' 
-            bg='amber.500' 
-            p={4} 
-            rounded='md'
-            _pressed={{
-                bg: 'amber.600'
-            }}
-            {...rest}
-        >
-           {texto}
-        </Button>
-    )
-
+export function ButtonDefault({ texto, ...rest }: ButtonProperties): JSX.Element {
+    return <Button
+        w="full"
+        bg="amber.500"
+        p={4}
+        rounded="md"
+        _pressed={{
+            "bg": "amber.600",
+        }}
+        {...rest}
+    >
+        {texto}
+    </Button>;
 }

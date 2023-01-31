@@ -1,12 +1,12 @@
-import {appSchema} from '@nozbe/watermelondb';
-import { contaSchema } from './ContaSchema';
+import { appSchema } from "@nozbe/watermelondb";
 
+import { contaSchema } from "./ContaSchema";
 
 const schemas = appSchema({
     version: 1,
     tables: [
-        contaSchema
-    ]
-})
+        contaSchema,
+    ],
+});
 
-export {schemas}
+export { schemas };

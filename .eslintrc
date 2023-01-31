@@ -1,0 +1,97 @@
+{
+    "env": {
+        "jest": true
+    },
+    "extends": [ "@odg" ],
+    "globals": {
+        "JSX": true
+    },
+    "overrides": [
+        {
+            "files": [
+                "*.ts",
+                "*.tsx"
+            ],
+            "rules": {
+                "@typescript-eslint/naming-convention": [
+                    "error",
+                    {
+                        "filter": {
+                            "match": false,
+                            "regex": "[- ]"
+                        },
+                        "format": [
+                            "strictCamelCase",
+                            "camelCase"
+                        ],
+                        // We allow double underscore because of GraphQL type names and some React names.
+                        "leadingUnderscore": "allowSingleOrDouble",
+                        "selector": [
+                            "variable",
+                            "parameterProperty",
+                            "classMethod",
+                            "objectLiteralMethod",
+                            "typeMethod",
+                            "accessor"
+                        ],
+                        "trailingUnderscore": "allow"
+                    },
+                    {
+                        "format": [
+                            "strictCamelCase",
+                            "camelCase",
+                            "UPPER_CASE"
+                        ],
+                        "selector": "classProperty"
+                    },
+                    {
+                        "format": [
+                            "PascalCase",
+                            "camelCase"
+                        ],
+                        "selector": [
+                            "typeLike",
+                            "function"
+                        ]
+                    },
+                    {
+                        "format": [ "StrictPascalCase" ],
+                        "prefix": [
+                            "is",
+                            "has",
+                            "can",
+                            "should",
+                            "will",
+                            "did",
+                            "does",
+                            "are",
+                            "do"
+                        ],
+                        "selector": "variable",
+                        "types": [ "boolean" ]
+                    },
+                    {
+                        "format": [ "PascalCase" ],
+                        "selector": "interface"
+                    },
+                    {
+                        "filter": "/^T$|^[A-Z][A-Za-z]+$/",
+                        "format": [ "StrictPascalCase" ],
+                        "selector": "typeParameter"
+                    },
+                    {
+                        "format": null,
+                        "modifiers": [ "requiresQuotes" ],
+                        "selector": [
+                            "classProperty",
+                            "objectLiteralProperty"
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "rules": {
+        "import/named": "off"
+    }
+}
